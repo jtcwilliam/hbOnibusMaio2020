@@ -1,13 +1,20 @@
 <html>
     <head></head>
     <body>
+            <a onclick="fechar()">James</a>
         
     </body>
     <script>
+        var i;
         var recursiva = function () {
                 console.log("Se passaram 1 segundo!");
-                setTimeout(recursiva, 5000);
+              i =  setTimeout(recursiva, 500);
             }
             recursiva();
+
+            function fechar(){
+                clearTimeout(i);
+            }
+
     </script>
 </html>

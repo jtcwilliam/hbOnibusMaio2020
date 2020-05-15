@@ -6,8 +6,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_erros', 1);
 error_reporting(E_ALL);
 
-  
- 
+
+
 include_once './classes/classeGenerica.php';
 
 include_once './classes/Onibus.php';
@@ -22,8 +22,7 @@ $objGenerica = new ClasseGenerica();
 
 
 
-if(isset($_POST['preReservaCadeira']))
-{
+if (isset($_POST['preReservaCadeira'])) {
 
 
     // preReservaCadeira: '1',
@@ -38,8 +37,6 @@ if(isset($_POST['preReservaCadeira']))
 
 
     $gravarClick = $objViagem->inserirUsuarioViagemPoltrona();
-
-
 }
 
 
@@ -53,22 +50,22 @@ if (isset($_POST['selecionarOnibus'])) {
 
     <div class="grid-x grid-padding-x">
 
-        <?php foreach ($onibus as  $urlOnibus) { 
-            
+        <?php foreach ($onibus as  $urlOnibus) {
+
             $PoltronasVazias = $objOnibus->selecaoGenerica(' count(onibusViagem_idOnibusViagem) as ocupadas FROM casadojo_moduloOnibus.poltrona
-            where onibusViagem_idOnibusViagem ='.$urlOnibus['idOnibusViagem']);
+            where onibusViagem_idOnibusViagem =' . $urlOnibus['idOnibusViagem']);
 
-                $tipoOnibus = $urlOnibus['tipoOnibusViagem'];
- 
-                $ocupadas =  $PoltronasVazias[0]['ocupadas'];
+            $tipoOnibus = $urlOnibus['tipoOnibusViagem'];
 
-                $disponiveis = $tipoOnibus - $ocupadas;
+            $ocupadas =  $PoltronasVazias[0]['ocupadas'];
 
-            
-            ?> <div class="cell small-12 medium-3 large-3">
-                <a style="width:100%; background-color: transparent" onclick="carregarPoltronasParaReservar('<?= $urlOnibus['idOnibusViagem'] ?>',true )" class="button links_A">
+            $disponiveis = $tipoOnibus - $ocupadas;
+
+
+        ?> <div class="cell small-12 medium-3 large-3">
+                <a style="width:100%; background-color: transparent" onclick="recarregar('<?= $urlOnibus['idOnibusViagem'] ?>',30 )" class="button links_A">
                     <img src="img/busao.png"><br>
-                    <h5><?php  echo $disponiveis .' Poltronas Disponíveis';      ?> </h5>
+                    <h5><?php echo $disponiveis . ' Poltronas Disponíveis';      ?> </h5>
                 </a>
             </div> <?php
                 }
@@ -89,25 +86,25 @@ if (isset($_POST['carregarViagem'])) {
 
 
 
-    $onibusFinal = $objGenerica->selecaoGenerica(' * from onibusViagem where idOnibusViagem='. $_POST['idOnibusViagem']);
+    $onibusFinal = $objGenerica->selecaoGenerica(' * from onibusViagem where idOnibusViagem=' . $_POST['idOnibusViagem']);
 
-     
+
 
     $_SESSION['onibusAtivo'] =  $_POST['idOnibusViagem'];
 
     $qtdePoltronas = $onibusFinal[0]['tipoOnibusViagem'];
 
 
- 
 
 
-     $dados = $objGenerica->selecaoGenerica(' usuario_idusuario, numeroPoltrona   from poltrona 
+
+    $dados = $objGenerica->selecaoGenerica(' usuario_idusuario, numeroPoltrona   from poltrona 
     where onibusViagem_idOnibusViagem=' . $_SESSION['onibusAtivo']);
 
-/*
+    /*
     $dados = $objGenerica->selecaoGenerica(' usuario_idusuario, numeroPoltrona   from poltrona 
     where onibusViagem_idOnibusViagem='. $_POST['idOnibusViagem']);
-    */ 
+    */
     switch ($qtdePoltronas) {
         case 46:
             //onibus de 40 lugares
@@ -115,211 +112,211 @@ if (isset($_POST['carregarViagem'])) {
             $tabelaB = $objOnibus->gerarOnibusMenor($qtdePoltronas, 2);
             $tabelaC = $objOnibus->gerarOnibusMenor($qtdePoltronas, 3);
             $tabelaD = $objOnibus->gerarOnibusMenor($qtdePoltronas, 4);
-    
+
             break;
-    
+
         case 42:
             //onibus de 40 lugares
             $tabelaA = $objOnibus->gerarOnibusMenor($qtdePoltronas, 1);
             $tabelaB = $objOnibus->gerarOnibusMenor($qtdePoltronas, 2);
             $tabelaC = $objOnibus->gerarOnibusMenor($qtdePoltronas, 3);
             $tabelaD = $objOnibus->gerarOnibusMenor($qtdePoltronas, 4);
-    
+
             break;
-    
-    
+
+
         default:
             break;
-    } 
+    }
 ?>
 
 
-<div class="grid-x grid-padding-x">
+    <div class="grid-x grid-padding-x">
 
 
-<div class="cell small-12   small-order-2 medium-6  medium-order-1 large-6   larger-order-1 ">
+        <div class="cell small-12   small-order-2 medium-6  medium-order-1 large-6   larger-order-1 ">
 
-    <fieldset class="fieldset">
-        <legend style="font-size: 25px">Escolha poltrona</legend>
-
-
-
-
-        <div class="grid-x grid-padding-x">
-            <div class="large-3 medium-3 small-3 cell">
-                <h5>Janela</h5>
-                <?php
+            <fieldset class="fieldset">
+                <legend style="font-size: 25px">Escolha poltrona</legend>
 
 
 
 
-                foreach ($tabelaA as $valueTabelaA) {
-
-
-
-                    if ($key = (array_search($valueTabelaA, array_column($dados, 'numeroPoltrona'))) !== false) {
-                ?>
-                        <div class="large-12 medium-12 small-12 cell">
-                            <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaA ?></p>
-                        </div>
-                    <?php
-                    } else {  ?>
-                        <div class="large-12 medium-12 small-12 cell">
-
-
-                            <a class="button  btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaA ?>); $(this).css('background-color', 'black') ; $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null); "> <?= $valueTabelaA ?></a>
-                        </div>
-                <?php
-
-                    }
-                }
-                ?>
-
-            </div>
-
-            <div class="large-3 medium-3 small-3 cell">
-                <h5>Corredor</h5>
-                <?php
-
-                foreach ($tabelaB as $valueTabelaB) {
-                    if ($key = (array_search($valueTabelaB, array_column($dados, 'numeroPoltrona'))) !== false) {
-                ?>
-                        <div class="large-12 medium-12 small-12 cell">
-                            <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaB ?></p>
-                        </div>
-                    <?php
-                    } else {  ?>
-                        <div class="large-12 medium-12 small-12 cell">
-
-                            <a class="button btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaB ?>); $(this).css('background-color', 'black');  $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);   "> <?= $valueTabelaB ?></a>
-
-                            <!-- <a class="button success"    data-open="abrirComandoInserir"   onclick="$('#txtNumeroPoltrona').val('<?= $valueTabelaB ?>');      $('#numeroPoltronaModal').html('<h3>Sua poltrona é a de nº: <h3>' +  '<h1 style=\'color:green\'  >'+<?= $valueTabelaB ?>+'</h1>')"  style="width: 100%; border-radius: 8px"   > <?= $valueTabelaB ?></a> -->
-                        </div>
-                <?php
-
-                    }
-                }
-                ?>
-
-            </div>
-
-            <div class="large-3 medium-3 small-3 cell">
-                <h5>Corredor</h5>
-                <?php
-                foreach ($tabelaD as $valueTabelaD) {
-
-                    if ($valueTabelaD == '0') {
-                ?>
-                        <div class="large-12 medium-12 small-12 cell">
-                            <a class="button " onclick="alert(<?= $valueTabelaD ?>)" style=" background-color: transparent ;width: 100%; border-radius: 8px"> &nbsp </a>
-                        </div>
-
-
-
+                <div class="grid-x grid-padding-x">
+                    <div class="large-3 medium-3 small-3 cell">
+                        <h5>Janela</h5>
                         <?php
 
 
-                    } else {
+
+
+                        foreach ($tabelaA as $valueTabelaA) {
 
 
 
-
-                        if ($key = (array_search($valueTabelaD, array_column($dados, 'numeroPoltrona'))) !== false) {
+                            if ($key = (array_search($valueTabelaA, array_column($dados, 'numeroPoltrona'))) !== false) {
                         ?>
-                            <div class="large-12 medium-12 small-12 cell">
-                                <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaD ?></p>
-                            </div>
+                                <div class="large-12 medium-12 small-12 cell">
+                                    <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaA ?></p>
+                                </div>
+                            <?php
+                            } else {  ?>
+                                <div class="large-12 medium-12 small-12 cell">
+
+
+                                    <a class="button  btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaA ?>); $(this).css('background-color', 'black') ; $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null); "> <?= $valueTabelaA ?></a>
+                                </div>
                         <?php
-                        } else {  ?>
-                            <div class="large-12 medium-12 small-12 cell">
 
-                                <a class="button btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaD ?>); $(this).css('background-color', 'black'); $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);  "> <?= $valueTabelaD ?></a>
-
-                                <!-- <a class="button success"    data-open="abrirComandoInserir"   onclick="$('#txtNumeroPoltrona').val('<?= $valueTabelaD ?>');   $('#numeroPoltronaModal').html('<h3>Sua poltrona é a de nº: <h3>' +  '<h1 style=\'color:green\'  >'+<?= $valueTabelaD ?>+'</h1>')"  style="width: 100%; border-radius: 8px"   > <?= $valueTabelaD ?></a> -->
-                            </div>
-                <?php
-
+                            }
                         }
-                    }
-                }
-                ?>
-
-            </div>
-
-
-            <div class="large-3 medium-3 small-3 cell">
-                <h5>Janela</h5>
-                <?php
-                foreach ($tabelaC as $valueTabelaC) {
-
-                    if ($valueTabelaC == '0') {
-                ?>
-                        <div class="large-12 medium-12 small-12 cell">
-                            <a class="button " onclick="alert(<?= $valueTabelaC ?>)" style=" background-color: transparent ;width: 100%; border-radius: 8px"> &nbsp </a>
-                        </div>
-
-                        <?php
-                    } else {
-
-                        if ($key = (array_search($valueTabelaC, array_column($dados, 'numeroPoltrona'))) !== false) {
                         ?>
-                            <div class="large-12 medium-12 small-12 cell">
-                                <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaC ?></p>
-                            </div>
+
+                    </div>
+
+                    <div class="large-3 medium-3 small-3 cell">
+                        <h5>Corredor</h5>
                         <?php
-                        } else {  ?>
-                            <div class="large-12 medium-12 small-12 cell">
 
-                                <a class="button btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaC ?>);  $(this).css('background-color', 'black'); $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);  "> <?= $valueTabelaC ?></a>
-                                <!-- <a class="button success"       data-open="abrirComandoInserir"   onclick="$('#txtNumeroPoltrona').val('<?= $valueTabelaC ?>'));      $('#numeroPoltronaModal').html('<h3>Sua poltrona é a de nº: <h3>' +  '<h1 style=\'color:green\'  >'+<?= $valueTabelaC ?>+'</h1>')"  style="width: 100%; border-radius: 8px"   > <?= $valueTabelaC ?></a> -->
-                            </div>
-                <?php
+                        foreach ($tabelaB as $valueTabelaB) {
+                            if ($key = (array_search($valueTabelaB, array_column($dados, 'numeroPoltrona'))) !== false) {
+                        ?>
+                                <div class="large-12 medium-12 small-12 cell">
+                                    <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaB ?></p>
+                                </div>
+                            <?php
+                            } else {  ?>
+                                <div class="large-12 medium-12 small-12 cell">
 
+                                    <a class="button btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaB ?>); $(this).css('background-color', 'black');  $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);   "> <?= $valueTabelaB ?></a>
+
+                                    <!-- <a class="button success"    data-open="abrirComandoInserir"   onclick="$('#txtNumeroPoltrona').val('<?= $valueTabelaB ?>');      $('#numeroPoltronaModal').html('<h3>Sua poltrona é a de nº: <h3>' +  '<h1 style=\'color:green\'  >'+<?= $valueTabelaB ?>+'</h1>')"  style="width: 100%; border-radius: 8px"   > <?= $valueTabelaB ?></a> -->
+                                </div>
+                        <?php
+
+                            }
                         }
-                    }
-                }
-                ?>
+                        ?>
 
-            </div>
+                    </div>
+
+                    <div class="large-3 medium-3 small-3 cell">
+                        <h5>Corredor</h5>
+                        <?php
+                        foreach ($tabelaD as $valueTabelaD) {
+
+                            if ($valueTabelaD == '0') {
+                        ?>
+                                <div class="large-12 medium-12 small-12 cell">
+                                    <a class="button " onclick="alert(<?= $valueTabelaD ?>)" style=" background-color: transparent ;width: 100%; border-radius: 8px"> &nbsp </a>
+                                </div>
+
+
+
+                                <?php
+
+
+                            } else {
+
+
+
+
+                                if ($key = (array_search($valueTabelaD, array_column($dados, 'numeroPoltrona'))) !== false) {
+                                ?>
+                                    <div class="large-12 medium-12 small-12 cell">
+                                        <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaD ?></p>
+                                    </div>
+                                <?php
+                                } else {  ?>
+                                    <div class="large-12 medium-12 small-12 cell">
+
+                                        <a class="button btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaD ?>); $(this).css('background-color', 'black'); $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);  "> <?= $valueTabelaD ?></a>
+
+                                        <!-- <a class="button success"    data-open="abrirComandoInserir"   onclick="$('#txtNumeroPoltrona').val('<?= $valueTabelaD ?>');   $('#numeroPoltronaModal').html('<h3>Sua poltrona é a de nº: <h3>' +  '<h1 style=\'color:green\'  >'+<?= $valueTabelaD ?>+'</h1>')"  style="width: 100%; border-radius: 8px"   > <?= $valueTabelaD ?></a> -->
+                                    </div>
+                        <?php
+
+                                }
+                            }
+                        }
+                        ?>
+
+                    </div>
+
+
+                    <div class="large-3 medium-3 small-3 cell">
+                        <h5>Janela</h5>
+                        <?php
+                        foreach ($tabelaC as $valueTabelaC) {
+
+                            if ($valueTabelaC == '0') {
+                        ?>
+                                <div class="large-12 medium-12 small-12 cell">
+                                    <a class="button " onclick="alert(<?= $valueTabelaC ?>)" style=" background-color: transparent ;width: 100%; border-radius: 8px"> &nbsp </a>
+                                </div>
+
+                                <?php
+                            } else {
+
+                                if ($key = (array_search($valueTabelaC, array_column($dados, 'numeroPoltrona'))) !== false) {
+                                ?>
+                                    <div class="large-12 medium-12 small-12 cell">
+                                        <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaC ?></p>
+                                    </div>
+                                <?php
+                                } else {  ?>
+                                    <div class="large-12 medium-12 small-12 cell">
+
+                                        <a class="button btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaC ?>);  $(this).css('background-color', 'black'); $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);  "> <?= $valueTabelaC ?></a>
+                                        <!-- <a class="button success"       data-open="abrirComandoInserir"   onclick="$('#txtNumeroPoltrona').val('<?= $valueTabelaC ?>'));      $('#numeroPoltronaModal').html('<h3>Sua poltrona é a de nº: <h3>' +  '<h1 style=\'color:green\'  >'+<?= $valueTabelaC ?>+'</h1>')"  style="width: 100%; border-radius: 8px"   > <?= $valueTabelaC ?></a> -->
+                                    </div>
+                        <?php
+
+                                }
+                            }
+                        }
+                        ?>
+
+                    </div>
+
+
+                </div>
+
+            </fieldset>
+
+        </div>
+
+
+
+
+        <div class="cell small-12   small-order-1  medium-6  medium-order-1 large-4  larger-order-1 ">
+
+            <fieldset class="fieldset">
+                <legend style="font-size: 25px">Poltrona(s) Selecionada( s)</legend>
+                <div id="botPoltronasReservada">
+
+                </div>
+
+                <a class="button success" onclick="inserirDadosPoltronas()" style="width: 100%; background-color: #d7ecfa; border-radius: 20px">Clique Aqui após escolher sua poltrona</a>
+
+                <a class="button warning" href="index.php" style="width: 100%; background-color: red; color: whitesmoke; border-radius: 20px">Cancelar</a>
+            </fieldset>
 
 
         </div>
 
-    </fieldset>
-
-</div>
 
 
 
-
-<div class="cell small-12   small-order-1  medium-6  medium-order-1 large-4  larger-order-1 ">
-
-    <fieldset class="fieldset">
-        <legend style="font-size: 25px">Poltrona(s) Selecionada( s)</legend>
-        <div id="botPoltronasReservada">
- 
-        </div> 
-
-        <a class="button success" onclick="inserirDadosPoltronas()" style="width: 100%; background-color: #d7ecfa; border-radius: 20px">Clique Aqui após escolher sua poltrona</a>
-
-        <a class="button warning"   href="index.php" style="width: 100%; background-color: red; color: whitesmoke; border-radius: 20px">Cancelar</a> 
-    </fieldset>
-
-
-</div>
-
-
-
-
-<div class="cell auto"></div>
-</div> 
+        <div class="cell auto"></div>
+    </div>
 <?php
 
- 
-    
-     
 
-   exit();
+
+
+
+    exit();
 }
 
 
@@ -387,9 +384,9 @@ if (isset($_POST['gravarCadeira'])) {
 
 
         $dadosUsuarioInserido = $objViagem->selecaoGenerica(" * from usuario where nomeUsuario = '" . $_POST['nomePoltrona'] . "'
-         and telefoneUsuario='" . $_POST['telefonePoltrona'] . "' and rgUsuario='". $_POST['rgPoltrona'] . "'");
+         and telefoneUsuario='" . $_POST['telefonePoltrona'] . "' and rgUsuario='" . $_POST['rgPoltrona'] . "'");
 
-            
+
 
 
         $objViagem->setUsuario_idusuario($dadosUsuarioInserido[0]['idusuario']);
@@ -510,7 +507,7 @@ if (isset($_POST['gravarCadeira'])) {
 
 
 
-<input type="text"   value=""  name="" id="hdOnibusAtivo">
+    <input type="text" value="" name="" id="hdOnibusAtivo">
 
 
     <div class="full reveal " data-animation-in="fade-in" id="modalEscolhaViagem" data-reveal style="background-color: #008DD7">
@@ -518,7 +515,7 @@ if (isset($_POST['gravarCadeira'])) {
 
             <fieldset class="fieldset">
 
-            <legend   style="font-size: 40; text-align: center"> Escolha Sua Viagem</legend>
+                <legend style="font-size: 40; text-align: center"> Escolha Sua Viagem</legend>
                 <div class="grid-x grid-padding-x">
                     <?php
                     foreach ($viagensAtivas as $key => $value) { ?>
@@ -543,8 +540,10 @@ if (isset($_POST['gravarCadeira'])) {
         <div class="modalEntradaTEstes">
             <fieldset class="fieldset">
                 <legend id="textoLegend" style="font-size: 40; text-align: center"> </legend>
-                        <center> <h4 style="color: whitesmoke; font-weight: bold" >Escolha abaixo o onibus que você quer viajar</h4> </center>
-                 
+                <center>
+                    <h4 style="color: whitesmoke; font-weight: bold">Escolha abaixo o onibus que você quer viajar</h4>
+                </center>
+
                 <div id="carregarOnibus">
 
                 </div>
@@ -745,15 +744,11 @@ if (isset($_POST['gravarCadeira'])) {
 
 
 
-<a onclick="recarrecarBus">Clicar aqui atualizar</a>
+        <!-- montagem das poltronas -->
 
- 
+        <div id="montaPoltronas">
+        </div>
 
-<!-- montagem das poltronas -->
-
-    <div id="montaPoltronas" >
-    </div>
-        
 
     </div>
 
@@ -767,14 +762,14 @@ if (isset($_POST['gravarCadeira'])) {
 
         $('#modalEscolhaViagem').foundation('open');
 
- 
-        var t;
 
-        
-            //setTimeout(consultarOnibusDaViagem('25'), 1000);
+       var timer;
 
-            
-        
+
+        //setTimeout(consultarOnibusDaViagem('25'), 1000);
+
+
+
 
 
 
@@ -783,37 +778,25 @@ if (isset($_POST['gravarCadeira'])) {
 
 
 
-        function carregarPoltronasParaReservar(idOnibusViagem, verificador){
+        function consultarOnibusDaViagem(idOnibusViagem, verificador) {
+
+            if(verificador == false){
+                console.log('entrou aqui');
+                clearTimeout(timer)
+                return false; 
+            }else{
 
 
+            $('#modalEscolheOnibus').foundation('close');
+            //$('#montaPoltronas').html('<center><img src="img/bus-loading.gif" ></center>');
 
             $('#hdOnibusAtivo').val(idOnibusViagem);
+
+
+
             
 
 
-                if(verificador == true){
-                    consultarOnibusDaViagem(idOnibusViagem, true)
- 
-                    return true;
-                }else{
-
-                        alert('parou');
-                        consultarOnibusDaViagem(idOnibusViagem, false)
-
-                    return false;
-                }
-
-
-        }                   
-
-        function consultarOnibusDaViagem(idOnibusViagem, verificador) 
-        { 
-            
-             $('#modalEscolheOnibus').foundation('close');
-           //$('#montaPoltronas').html('<center><img src="img/bus-loading.gif" ></center>');
-
- 
-  
             $.ajax({
                 dataType: 'html',
                 url: 'index.php',
@@ -822,19 +805,26 @@ if (isset($_POST['gravarCadeira'])) {
                     carregarViagem: '1',
                     idOnibusViagem: idOnibusViagem
                 },
-                success: function(data) 
-                    {
-                       $('#montaPoltronas').html(data);
-                      console.log('james');
-                   t = setTimeout(consultarOnibusDaViagem( idOnibusViagem, true), 12000)
-                    }
-            } 
-            ); 
+                success: function(data) {
+
+
+                  
+
+                    $('#montaPoltronas').html(data);
+                    console.log('james');
+
+              
+                    recarregar(idOnibusViagem, true);
+
+                    
+
+                }
+            });
+        }
 
 
 
- 
-        } 
+        }
 
         function carregarOnibus(idViagem, labelLocal) {
 
@@ -865,9 +855,6 @@ if (isset($_POST['gravarCadeira'])) {
             });
         }
 
-
-
-
         function consultaUsuario(rgPoltrona, callback) {
             $.ajax({
                 data: {
@@ -883,10 +870,29 @@ if (isset($_POST['gravarCadeira'])) {
             });
         }
 
+
+
+        function recarregar(idOnibusViagem, contador) {
+
+  
+                         timer = setTimeout(function() {
+                            consultarOnibusDaViagem(idOnibusViagem, true)
+                    }, 5000);
+
+ 
+ 
+    }
+
+
         function reservaPoltrona(poltronaClicada) {
+          
+            consultarOnibusDaViagem(0, false);
+
+
+             
             contandoClicks++; 
             var onibusAtivo = $('#hdOnibusAtivo').val(); 
-            clearTimeout(t);
+          
 
             $.ajax({
                 dataType: 'json',
@@ -916,8 +922,7 @@ if (isset($_POST['gravarCadeira'])) {
             if (contandoClicks == 2) {
                 $('.btnPraReservar').attr("disabled", true);
                 $('.btnPraReservar').prop("onclick", null);
-            }
-
+            } 
         }
 
         function resetarCampoRG() {
@@ -1071,13 +1076,12 @@ if (isset($_POST['gravarCadeira'])) {
 
         }
 
- 
 
-        
+
+
 
 
         $('#mensagemSucesso').hide();
-        
     </script>
 </body>
 
