@@ -1,0 +1,10 @@
+<div class='grid-x grid-padding-x'>
+            <div class="large-12 medium-12 small-12 cell">
+                <fieldset class="fieldset">
+                    <legend><h4>Poltrona:    </h4></legend>
+                    <input type="text"  class="nomePooltrona" placeholder="Nome" />
+                    <input type="text"  class="nomePooltrona" placeholder="RG" />
+                </fieldset>
+
+            </div>
+        </div>
