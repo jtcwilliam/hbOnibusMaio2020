@@ -877,7 +877,7 @@ if (isset($_POST['gravarCadeira'])) {
   
                          timer = setTimeout(function() {
                             consultarOnibusDaViagem(idOnibusViagem, true)
-                    }, 5000);
+                    }, 12000);
 
  
  
