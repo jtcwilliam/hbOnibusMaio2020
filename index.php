@@ -1,11 +1,7 @@
 <?php
 
 session_start();
-
-ini_set('display_errors', 1);
-ini_set('display_startup_erros', 1);
-error_reporting(E_ALL);
-
+ 
 
 
 include_once './classes/classeGenerica.php';
@@ -101,6 +97,12 @@ if (isset($_POST['carregarViagem'])) {
     $dados = $objGenerica->selecaoGenerica(' usuario_idusuario, numeroPoltrona   from poltrona 
     where onibusViagem_idOnibusViagem=' . $_SESSION['onibusAtivo']);
 
+    if(isset($_POST['poltronasReservadasClicadas'])){
+       $tabelaClicadaReserva =  $_POST['poltronasReservadasClicadas'];
+ 
+    }
+
+
     /*
     $dados = $objGenerica->selecaoGenerica(' usuario_idusuario, numeroPoltrona   from poltrona 
     where onibusViagem_idOnibusViagem='. $_POST['idOnibusViagem']);
@@ -131,7 +133,7 @@ if (isset($_POST['carregarViagem'])) {
 ?>
 
 
-    <div class="grid-x grid-padding-x">
+  
 
 
         <div class="cell small-12   small-order-2 medium-6  medium-order-1 large-6   larger-order-1 ">
@@ -147,24 +149,24 @@ if (isset($_POST['carregarViagem'])) {
                         <h5>Janela</h5>
                         <?php
 
-
-
-
+ 
                         foreach ($tabelaA as $valueTabelaA) {
-
-
+ 
 
                             if ($key = (array_search($valueTabelaA, array_column($dados, 'numeroPoltrona'))) !== false) {
                         ?>
                                 <div class="large-12 medium-12 small-12 cell">
-                                    <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaA ?></p>
+                                    <p class="button alert  btnHb " style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaA ?></p>
                                 </div>
                             <?php
-                            } else {  ?>
+                            } else { 
+                                    
+                             
+                            
+                                
+                                ?>
                                 <div class="large-12 medium-12 small-12 cell">
-
-
-                                    <a class="button  btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaA ?>); $(this).css('background-color', 'black') ; $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null); "> <?= $valueTabelaA ?></a>
+                                    <a class="button  btnPraReservar btnHb" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaA ?>); $(this).css('background-color', 'black') ; $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null); "> <?= $valueTabelaA ?></a>
                                 </div>
                         <?php
 
@@ -182,13 +184,13 @@ if (isset($_POST['carregarViagem'])) {
                             if ($key = (array_search($valueTabelaB, array_column($dados, 'numeroPoltrona'))) !== false) {
                         ?>
                                 <div class="large-12 medium-12 small-12 cell">
-                                    <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaB ?></p>
+                                    <p class="button alert btnHb " style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaB ?></p>
                                 </div>
                             <?php
                             } else {  ?>
                                 <div class="large-12 medium-12 small-12 cell">
 
-                                    <a class="button btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaB ?>); $(this).css('background-color', 'black');  $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);   "> <?= $valueTabelaB ?></a>
+                                    <a class="button btnPraReservar btnHb" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaB ?>); $(this).css('background-color', 'black');  $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);   "> <?= $valueTabelaB ?></a>
 
                                     <!-- <a class="button success"    data-open="abrirComandoInserir"   onclick="$('#txtNumeroPoltrona').val('<?= $valueTabelaB ?>');      $('#numeroPoltronaModal').html('<h3>Sua poltrona é a de nº: <h3>' +  '<h1 style=\'color:green\'  >'+<?= $valueTabelaB ?>+'</h1>')"  style="width: 100%; border-radius: 8px"   > <?= $valueTabelaB ?></a> -->
                                 </div>
@@ -208,7 +210,7 @@ if (isset($_POST['carregarViagem'])) {
                             if ($valueTabelaD == '0') {
                         ?>
                                 <div class="large-12 medium-12 small-12 cell">
-                                    <a class="button " onclick="alert(<?= $valueTabelaD ?>)" style=" background-color: transparent ;width: 100%; border-radius: 8px"> &nbsp </a>
+                                    <a class="button  btnHb " onclick="alert(<?= $valueTabelaD ?>)" style=" background-color: transparent ;width: 100%; border-radius: 8px"> &nbsp </a>
                                 </div>
 
 
@@ -224,13 +226,13 @@ if (isset($_POST['carregarViagem'])) {
                                 if ($key = (array_search($valueTabelaD, array_column($dados, 'numeroPoltrona'))) !== false) {
                                 ?>
                                     <div class="large-12 medium-12 small-12 cell">
-                                        <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaD ?></p>
+                                        <p class="button alert btnHb" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaD ?></p>
                                     </div>
                                 <?php
                                 } else {  ?>
                                     <div class="large-12 medium-12 small-12 cell">
 
-                                        <a class="button btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaD ?>); $(this).css('background-color', 'black'); $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);  "> <?= $valueTabelaD ?></a>
+                                        <a class="button btnPraReservar btnHb" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaD ?>); $(this).css('background-color', 'black'); $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);  "> <?= $valueTabelaD ?></a>
 
                                         <!-- <a class="button success"    data-open="abrirComandoInserir"   onclick="$('#txtNumeroPoltrona').val('<?= $valueTabelaD ?>');   $('#numeroPoltronaModal').html('<h3>Sua poltrona é a de nº: <h3>' +  '<h1 style=\'color:green\'  >'+<?= $valueTabelaD ?>+'</h1>')"  style="width: 100%; border-radius: 8px"   > <?= $valueTabelaD ?></a> -->
                                     </div>
@@ -252,7 +254,7 @@ if (isset($_POST['carregarViagem'])) {
                             if ($valueTabelaC == '0') {
                         ?>
                                 <div class="large-12 medium-12 small-12 cell">
-                                    <a class="button " onclick="alert(<?= $valueTabelaC ?>)" style=" background-color: transparent ;width: 100%; border-radius: 8px"> &nbsp </a>
+                                    <a class="button btnHb " onclick="alert(<?= $valueTabelaC ?>)" style=" background-color: transparent ;width: 100%; border-radius: 8px"> &nbsp </a>
                                 </div>
 
                                 <?php
@@ -261,13 +263,13 @@ if (isset($_POST['carregarViagem'])) {
                                 if ($key = (array_search($valueTabelaC, array_column($dados, 'numeroPoltrona'))) !== false) {
                                 ?>
                                     <div class="large-12 medium-12 small-12 cell">
-                                        <p class="button alert" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaC ?></p>
+                                        <p class="button alert btnHb" style="width: 100%; border-radius: 8px; cursor: not-allowed"> <?= $valueTabelaC ?></p>
                                     </div>
                                 <?php
                                 } else {  ?>
                                     <div class="large-12 medium-12 small-12 cell">
 
-                                        <a class="button btnPraReservar" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaC ?>);  $(this).css('background-color', 'black'); $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);  "> <?= $valueTabelaC ?></a>
+                                        <a class="button btnPraReservar btnHb" style="width: 100%; border-radius: 8px " onclick="reservaPoltrona(<?= $valueTabelaC ?>);  $(this).css('background-color', 'black'); $(this).css('cursor', 'not-allowed');  $(this).prop('onclick', null);  "> <?= $valueTabelaC ?></a>
                                         <!-- <a class="button success"       data-open="abrirComandoInserir"   onclick="$('#txtNumeroPoltrona').val('<?= $valueTabelaC ?>'));      $('#numeroPoltronaModal').html('<h3>Sua poltrona é a de nº: <h3>' +  '<h1 style=\'color:green\'  >'+<?= $valueTabelaC ?>+'</h1>')"  style="width: 100%; border-radius: 8px"   > <?= $valueTabelaC ?></a> -->
                                     </div>
                         <?php
@@ -288,7 +290,7 @@ if (isset($_POST['carregarViagem'])) {
 
 
 
-
+<!--
         <div class="cell small-12   small-order-1  medium-6  medium-order-1 large-4  larger-order-1 ">
 
             <fieldset class="fieldset">
@@ -306,10 +308,12 @@ if (isset($_POST['carregarViagem'])) {
         </div>
 
 
-
-
-        <div class="cell auto"></div>
+         <div class="cell auto"></div>
     </div>
+                    -->
+
+
+       
 <?php
 
 
@@ -507,7 +511,7 @@ if (isset($_POST['gravarCadeira'])) {
 
 
 
-    <input type="text" value="" name="" id="hdOnibusAtivo">
+    <input type="hidden" value="" name="" id="hdOnibusAtivo">
 
 
     <div class="full reveal " data-animation-in="fade-in" id="modalEscolhaViagem" data-reveal style="background-color: #008DD7">
@@ -744,10 +748,35 @@ if (isset($_POST['gravarCadeira'])) {
 
 
 
+<div id="poltronasReservadasTeste"> </div>
+
+
         <!-- montagem das poltronas -->
 
+
+        <div class="grid-x grid-margin-x">
         <div id="montaPoltronas">
         </div>
+
+        <div class="cell small-12   small-order-1  medium-6  medium-order-1 large-4  larger-order-1 ">
+
+            <fieldset class="fieldset">
+                <legend style="font-size: 25px">Poltrona(s) Selecionada( s)</legend>
+                <div id="botPoltronasReservada">
+
+                </div>
+
+                <a class="button success" onclick="inserirDadosPoltronas()" style="width: 100%; background-color: #d7ecfa; border-radius: 20px">Clique Aqui após escolher sua poltrona</a>
+
+                <a class="button warning" href="index.php" style="width: 100%; background-color: red; color: whitesmoke; border-radius: 20px">Cancelar</a>
+            </fieldset>
+
+
+            </div>
+        </div>
+
+
+        
 
 
     </div>
@@ -759,72 +788,65 @@ if (isset($_POST['gravarCadeira'])) {
 
     <script>
         var contandoClicks = 0;
+        var poltronasClicadasPraReserva = [];
+
+        var timer;
+        
 
         $('#modalEscolhaViagem').foundation('open');
+            
 
-
-       var timer;
-
-
-        //setTimeout(consultarOnibusDaViagem('25'), 1000);
-
-
-
-
-
-
-
-        //consultarOnibusDaViagem
-
-
-
-        function consultarOnibusDaViagem(idOnibusViagem, verificador) {
-
-            if(verificador == false){
-                console.log('entrou aqui');
-                clearTimeout(timer)
-                return false; 
-            }else{
-
-
+              
+  
+        function consultarOnibusDaViagem(idOnibusViagem, verificador, poltronasClicadasPraReserva) {
+  
             $('#modalEscolheOnibus').foundation('close');
             //$('#montaPoltronas').html('<center><img src="img/bus-loading.gif" ></center>');
 
-            $('#hdOnibusAtivo').val(idOnibusViagem);
-
-
-
-            
-
-
+            $('#hdOnibusAtivo').val(idOnibusViagem); 
+ 
             $.ajax({
                 dataType: 'html',
                 url: 'index.php',
                 type: 'post',
                 data: {
                     carregarViagem: '1',
+                    poltronasClicadasPraReserva: poltronasClicadasPraReserva,
                     idOnibusViagem: idOnibusViagem
                 },
                 success: function(data) {
+                   
+                   
+
+                      if(poltronasClicadasPraReserva.length ==0){
+                        $('#montaPoltronas').html(data);
+                            console.log('recarregar');
+                            recarregar(idOnibusViagem, true);
 
 
+                      }else{
+                          clearTimeout(timer);
+                          console.log('não carrega');
+                      }
+                     
                   
 
-                    $('#montaPoltronas').html(data);
-                    console.log('james');
+                      if (contandoClicks ==2 ) 
+                        {
+                            $('.btnPraReservar').attr("disabled", true);
+                            $('.btnPraReservar').prop("onclick", null);
+                        } 
+                            
 
               
-                    recarregar(idOnibusViagem, true);
+                   
 
                     
 
                 }
             });
-        }
-
-
-
-        }
+       
+     }
 
         function carregarOnibus(idViagem, labelLocal) {
 
@@ -833,10 +855,7 @@ if (isset($_POST['gravarCadeira'])) {
             $('#montaPoltronas').html('<center><img src="img/bus-loading.gif" ></center>');
 
 
-            console.log(labelLocal);
-
-
-
+            console.log(labelLocal); 
             $.ajax({
                 dataType: 'html',
                 url: 'index.php',
@@ -850,34 +869,22 @@ if (isset($_POST['gravarCadeira'])) {
                     $('#textoLegend').html('Viagem: ' + labelLocal);
                     $('#modalEscolheOnibus').foundation('open');
 
+                    
+
 
                 }
             });
         }
 
-        function consultaUsuario(rgPoltrona, callback) {
-            $.ajax({
-                data: {
-                    rgPoltrona: rgPoltrona,
-                    gravarPoltrona: '1'
-                },
-                url: 'index.php',
-                dataType: 'json',
-                type: 'POST',
-                success: function(resultado) {
-                    callback(resultado.retorno);
-                }
-            });
-        }
-
-
-
+        
+ 
         function recarregar(idOnibusViagem, contador) {
 
   
                          timer = setTimeout(function() {
-                            consultarOnibusDaViagem(idOnibusViagem, true)
-                    }, 12000);
+                           
+                            consultarOnibusDaViagem(idOnibusViagem, true, poltronasClicadasPraReserva)
+                    }, 4000);
 
  
  
@@ -886,11 +893,16 @@ if (isset($_POST['gravarCadeira'])) {
 
         function reservaPoltrona(poltronaClicada) {
           
-            consultarOnibusDaViagem(0, false);
+          
+                poltronasClicadasPraReserva.push(poltronaClicada);
 
+            
+
+                $('#poltronasReservadasTeste').append('<input type="hidden"   class="poltronasReservadasClass"  id="campoPoltrona'+contandoClicks+'" value='+poltronaClicada+' > ');
 
              
             contandoClicks++; 
+            console.log(poltronasClicadasPraReserva);
             var onibusAtivo = $('#hdOnibusAtivo').val(); 
           
 
@@ -925,22 +937,9 @@ if (isset($_POST['gravarCadeira'])) {
             } 
         }
 
-        function resetarCampoRG() {
+       
 
-            $('.camposUsuario').each(function() {
-
-                $(this).css('background-color', '');
-                $(this).val('');
-                $('.mensagemPoltrona').html('');
-                $('#botaoConfirmaReservas').show();
-
-            });
-
-
-
-
-        }
-
+        //função a ser migrada para novo arquivo
         function gravarPoltronas() {
 
             $('#botaoConfirmaReservas').hide();
@@ -1017,6 +1016,22 @@ if (isset($_POST['gravarCadeira'])) {
             }
         }
 
+        function consultaUsuario(rgPoltrona, callback) {
+            $.ajax({
+                data: {
+                    rgPoltrona: rgPoltrona,
+                    gravarPoltrona: '1'
+                },
+                url: 'index.php',
+                dataType: 'json',
+                type: 'POST',
+                success: function(resultado) {
+                    callback(resultado.retorno);
+                }
+            });
+        }
+
+        //funcao a ser migrada para outro arquivo
         function gravarUsuarioNaPoltrona(nomePoltrona, rgPoltrona, telefonePoltrona, emailPoltrona, numeroPoltrona, callback) {
             $.ajax({
                 dataType: 'json',
@@ -1038,6 +1053,7 @@ if (isset($_POST['gravarCadeira'])) {
             });
         }
 
+        //funcao a ser migrada para outro arquivo
         function inserirDadosPoltronas() {
             $('#abrirComandoInserir').foundation('open');
 
